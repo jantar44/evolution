@@ -28,7 +28,7 @@ class Animal():
     
     _ids = count(10)
     
-    def __init__(self, nr, lifespan = 30, speed = 2, alive = True,food = 0):
+    def __init__(self, nr, lifespan = 30, speed = 2, food = 0):
         self.nr = nr
         self.evolve = random.randint(-3,3)
         self.lifespan = lifespan + self.evolve
@@ -92,7 +92,7 @@ class Animal():
     def multiplicate(self):
         self.id = next(self._ids)
         #print(self.id)
-        animals.append(Animal(nr = self.id, lifespan = self.old_lifespan, speed = self.old_speed, alive = True, food=1))
+        animals.append(Animal(nr = self.id, lifespan = self.old_lifespan, speed = self.old_speed, food=1))
         print(len(animals))
 
     def get_stats(self):
