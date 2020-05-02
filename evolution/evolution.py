@@ -28,7 +28,7 @@ class Animal():
     
     _ids = count(10)
     
-    def __init__(self, nr, lifespan = 30, speed = 2):
+    def __init__(self, nr, lifespan = 30, speed = 2, food = 0):
         self.nr = nr
         self.evolve = random.randint(-3,3)
         self.lifespan = lifespan + self.evolve
@@ -37,7 +37,7 @@ class Animal():
         if self.speed == 0:
             self.speed = 1 
         self.old_speed = self.speed
-        self.food = 0
+        self.food = food
         self.x = 0
         self.alive = True
         populated = True
@@ -53,28 +53,28 @@ class Animal():
         if self.alive == True:
             for i in range(0,self.speed):
                 self.direction = random.randint(1,4)
-                if self.direction == 1 and self.lifespan > 0 and self.x <= 23:   #prawo
+                if self.direction == 1 and self.lifespan > 0 and self.x <= 23 and pole.field[self.y][self.x+1] != '-':   #prawo
                     self.x += 1
                     self.lifespan -= 1
                     if pole.field[self.y][self.x] == 1:
                         self.food += 1
                     pole.field[self.y][self.x]='-'
 
-                elif self.direction == 2 and self.lifespan > 0 and self.x >= -24:      #lewo
+                elif self.direction == 2 and self.lifespan > 0 and self.x >= -24 and pole.field[self.y][self.x-1] != '-':      #lewo
                     self.x -= 1
                     self.lifespan -= 1
                     if pole.field[self.y][self.x] == 1:
                         self.food += 1
                     pole.field[self.y][self.x]='-'
 
-                elif self.direction == 3 and self.lifespan > 0 and self.y >= -49:      #góra
+                elif self.direction == 3 and self.lifespan > 0 and self.y >= -49 and pole.field[self.y-1][self.x] != '-':      #góra
                     self.y -= 1
                     self.lifespan -= 1
                     if pole.field[self.y][self.x] == 1:
                         self.food += 1
                     pole.field[self.y][self.x]='-'
 
-                elif self.direction == 4 and self.lifespan > 0 and self.y <= 48:      #dół
+                elif self.direction == 4 and self.lifespan > 0 and self.y <= 48 and pole.field[self.y+1][self.x] != '-':      #dół
                     self.y -= 1
                     self.lifespan -= 1
                     if pole.field[self.y][self.x] == 1:
@@ -91,15 +91,14 @@ class Animal():
 
     def multiplicate(self):
         self.id = next(self._ids)
-        animals.append(Animal(nr = self.id, lifespan = self.old_lifespan, speed = self.old_speed))
+        #print(self.id)
+        animals.append(Animal(nr = self.id, lifespan = self.old_lifespan, speed = self.old_speed, food=1))
+        print(len(animals))
 
     def get_stats(self):
         #print('Name: ', self.name, 'Lifespan = ', self.lifespan, 'Speed = ', self.speed)
         return self.name, self.lifespan, self.speed
 
-#class Gameplay():
-    
-#    def __init__(self):
 pole = Field()
 animals = [Animal(x) for x in range(1,11)]    
 
@@ -112,8 +111,7 @@ for i in range(10):
             animal.move()   #ruch
             #print(animal.nr,'ruszyl')
             
-    for animal in animals:
-        
+    for animal in animals:#tu jest błąd nowy 
         if animal.food == 0:
             animal.die()
         elif animal.food == 1:
@@ -121,7 +119,7 @@ for i in range(10):
         elif animal.food > 1:
             animal.multiplicate()
             animal.reset()
-    
+    #pprint(pole.field)
     pole.clear()#
     for animal in animals:
         if animal.alive == True:
@@ -131,54 +129,12 @@ for i in range(10):
         animal.food = 0
 
 pprint(statystyki)
-
-
-#rozrzut jedzenia
-#populacja
-#pętla:
-#	ruch_mały x lifespan
-#	sprawdzenie:
-#		2 multip
-#		1 nic
-#		0 smierc
-#	aktuaizacja zwierzat
-
-
-#for animal
+print(len(animals))
+print(animals[24].alive)
 
 
 
 
-#for i in range(50):   # do poprawy
-#    for animal in animals:
-#        animal.move()
-        
-#    def inner_play(self):
-#        pass
-#animals[4].multiplicate(4)        
-#game = Gameplay()        
-#print(animals[20])
 
 
-# =============================================================================
-# print(pole.field)
-# pole.food()
-# pprint(pole.field)
-#     
-#     
-#     
-#     
-#     """ This class represents an instance of the game. If we need to
-#         reset the game we'd just need to create a new instance of this
-#         class. """
-#     
-#     
-#     
-# =============================================================================
-    
-    
-    
-    
-    
-    
-    
+
