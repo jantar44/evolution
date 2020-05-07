@@ -7,6 +7,7 @@ Created on %(03.05.2020)s
 from pprint import pprint
 from itertools import count
 import random
+import numpy as np
 
 class Field:
     """
@@ -15,7 +16,7 @@ class Field:
     Attributes:
         field (list): Matrix 2D representing field 25x50.
     """
-    field = [[0 for i in range(25)] for j in range(50)]
+    field = np.zeros((50, 25), dtype=int)
 
     @classmethod
     def food(cls):
@@ -32,8 +33,8 @@ class Field:
             while empty:
                 x_cor = random.randint(1, 24)
                 y_cor = random.randint(0, 49)
-                if POLE.field[y_cor][x_cor] != 1:
-                    POLE.field[y_cor][x_cor] = 1
+                if POLE.field[y_cor, x_cor] != 1:
+                    POLE.field[y_cor, x_cor] = 1
                     empty = False
                 else:
                     pass
@@ -46,7 +47,7 @@ class Field:
         Parameters:
            None
         """
-        POLE.field = [[0 for i in range(25)] for j in range(50)]
+        POLE.field = np.zeros((50, 25), dtype=int)
 
 class Animal:
     """
@@ -114,10 +115,10 @@ class Animal:
         empty = False
         while not empty:
             y_pop = random.randint(0, 49)
-            if POLE.field[y_pop][0] == 0:
+            if POLE.field[y_pop, 0] == 0:
                 self.y_cor = y_pop
                 self.y_pop = y_pop
-                POLE.field[y_pop][0] = 'o'
+                POLE.field[y_pop, 0] = 3
                 empty = True
         return self.x_cor, self.y_cor, self.y_pop
 
@@ -140,36 +141,39 @@ class Animal:
                 self.direction = random.randint(1, 4)
 
                 if self.direction == 1 and self.lifespan > 0 \
-                and self.x_cor <= 23 and POLE.field[self.y_cor][self.x_cor+1] != '-':#prawo
+                and self.x_cor <= 23 and POLE.field[self.y_cor, self.x_cor+1] != 2:#prawo
                     self.x_cor += 1
                     self.lifespan -= 1
-                    if POLE.field[self.y_cor][self.x_cor] == 1:
+                    if POLE.field[self.y_cor, self.x_cor] == 1:
                         self.food += 1
-                    POLE.field[self.y_cor][self.x_cor] = '-'
+                    POLE.field[self.y_cor, self.x_cor] = 2
 
                 elif self.direction == 2 and self.lifespan > 0 and \
-                self.x_cor >= -24 and POLE.field[self.y_cor][self.x_cor-1] != '-': #lewo
+                self.x_cor >= -24 and POLE.field[self.y_cor, self.x_cor-1] != 2: #lewo
                     self.x_cor -= 1
                     self.lifespan -= 1
-                    if POLE.field[self.y_cor][self.x_cor] == 1:
+                    if POLE.field[self.y_cor, self.x_cor] == 1:
                         self.food += 1
-                    POLE.field[self.y_cor][self.x_cor] = '-'
+                    POLE.field[self.y_cor, self.x_cor] = 2
 
                 elif self.direction == 3 and self.lifespan > 0 and \
-                self.y_cor >= -49 and POLE.field[self.y_cor-1][self.x_cor] != '-':  #góra
+                self.y_cor >= -49 and POLE.field[self.y_cor-1, self.x_cor] != 2:  #góra
                     self.y_cor -= 1
                     self.lifespan -= 1
-                    if POLE.field[self.y_cor][self.x_cor] == 1:
+                    if POLE.field[self.y_cor, self.x_cor] == 1:
                         self.food += 1
-                    POLE.field[self.y_cor][self.x_cor] = '-'
+                    POLE.field[self.y_cor, self.x_cor] = 2
 
                 elif self.direction == 4 and self.lifespan > 0 and \
-                self.y_cor <= 48 and POLE.field[self.y_cor+1][self.x_cor] != '-':    #dół
+                self.y_cor <= 48 and POLE.field[self.y_cor+1, self.x_cor] != 2:    #dół
                     self.y_cor -= 1
                     self.lifespan -= 1
-                    if POLE.field[self.y_cor][self.x_cor] == 1:
+                    if POLE.field[self.y_cor, self.x_cor] == 1:
                         self.food += 1
-                    POLE.field[self.y_cor][self.x_cor] = '-'
+                    POLE.field[self.y_cor, self.x_cor] = 2
+
+                else:
+                    break
 
     def die(self):
         """
@@ -242,7 +246,7 @@ if __name__ == "__main__":
     POLE = Field()
     ANIMALS = [Animal() for x in range(1, 11)]
     STATISTICS = []
-    for i in range(100):
+    for i in range(70):
         print(i)
         POLE.food()#rozrzut jedzenia
         for j in range(40):   #do poprawy
@@ -252,7 +256,6 @@ if __name__ == "__main__":
         for animal in ANIMALS:
             animal.check_food()
 
-        #pprint(POLE.field)
         POLE.clear()
 
         STATISTICS = get_statistics()

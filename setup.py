@@ -6,5 +6,5 @@ setup(
    description='Simulation of the evolution',
    author='Me',
    packages=['evolution'],
-   install_requires=['random', 'pprint'],
+   install_requires=['random', 'pprint']
 )

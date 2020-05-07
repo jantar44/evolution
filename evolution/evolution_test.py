@@ -16,6 +16,7 @@ class Field:
         field (list): Matrix 2D representing field 25x50.
     """
     field = [[0 for i in range(25)] for j in range(50)]
+    print('field initialized')
 
     @classmethod
     def food(cls):
@@ -26,7 +27,7 @@ class Field:
         Parameters:
            None
         """
-
+        print('Food is begining to be thrown')
         for _i in range(80):
             empty = True
             while empty:
@@ -47,6 +48,7 @@ class Field:
            None
         """
         POLE.field = [[0 for i in range(25)] for j in range(50)]
+        print('Food is cleared')
 
 class Animal:
     """
@@ -89,7 +91,7 @@ class Animal:
             y_pop (int): starting y coordinate.
         """
         self.id_animal = next(self._ids)
-        self.evolve = random.randint(-3, 3)
+        self.evolve = random.randint(0,0)
         self.lifespan = lifespan + self.evolve
         self.old_lifespan = self.lifespan
         self.speed = round(speed - 0.3 *self.evolve)
@@ -99,6 +101,7 @@ class Animal:
         self.food = food
         self.alive = True
         self.coordiates = [self.populate()]
+        print('Animal is created - ID:', self.id_animal, 'speed:' , self.speed, 'life: ', self.lifespan, 'food', self.food)
 
     def populate(self):
         """
@@ -119,6 +122,7 @@ class Animal:
                 self.y_pop = y_pop
                 POLE.field[y_pop][0] = 'o'
                 empty = True
+        print('Animal is populated')
         return self.x_cor, self.y_cor, self.y_pop
 
     def move(self):
@@ -134,8 +138,9 @@ class Animal:
             lifespan (int): value representing amount of movements overall.
 
         """
-
+        print('Animal is beggining move dead or alive')
         if self.alive is True:
+            print('Alive animal is beggining move with moves ->', self.speed )
             for _i in range(0, self.speed):
                 self.direction = random.randint(1, 4)
 
@@ -146,6 +151,7 @@ class Animal:
                     if POLE.field[self.y_cor][self.x_cor] == 1:
                         self.food += 1
                     POLE.field[self.y_cor][self.x_cor] = '-'
+                    print('moveR')
 
                 elif self.direction == 2 and self.lifespan > 0 and \
                 self.x_cor >= -24 and POLE.field[self.y_cor][self.x_cor-1] != '-': #lewo
@@ -154,6 +160,7 @@ class Animal:
                     if POLE.field[self.y_cor][self.x_cor] == 1:
                         self.food += 1
                     POLE.field[self.y_cor][self.x_cor] = '-'
+                    print('moveL')
 
                 elif self.direction == 3 and self.lifespan > 0 and \
                 self.y_cor >= -49 and POLE.field[self.y_cor-1][self.x_cor] != '-':  #góra
@@ -162,6 +169,7 @@ class Animal:
                     if POLE.field[self.y_cor][self.x_cor] == 1:
                         self.food += 1
                     POLE.field[self.y_cor][self.x_cor] = '-'
+                    print('moveU')
 
                 elif self.direction == 4 and self.lifespan > 0 and \
                 self.y_cor <= 48 and POLE.field[self.y_cor+1][self.x_cor] != '-':    #dół
@@ -170,6 +178,10 @@ class Animal:
                     if POLE.field[self.y_cor][self.x_cor] == 1:
                         self.food += 1
                     POLE.field[self.y_cor][self.x_cor] = '-'
+                    print('moveD')
+
+            print('move finished of Animal:',self.id_animal, self.food)
+            print()
 
     def die(self):
         """
@@ -180,6 +192,7 @@ class Animal:
         """
 
         self.alive = False
+        print('DIE')
 
     def reset(self):
         """
@@ -196,6 +209,7 @@ class Animal:
         self.speed = self.old_speed
         self.x_cor = 0
         self.y_cor = self.y_pop
+        print('reset')
 
     def multiplicate(self):
         """
@@ -209,6 +223,8 @@ class Animal:
 
         ANIMALS.append(Animal(lifespan=self.old_lifespan, \
                               speed=self.old_speed, food=1))
+        print('multiplicated')
+        print()
 
     def check_food(self):
         """
@@ -217,7 +233,7 @@ class Animal:
         Parameters:
             food (int): value representing number of points collected.
         """
-
+        print(self.id_animal, 'food checked', self.food)
         if self.food == 0:
             Animal.die(self)
         elif self.food == 1:
@@ -236,21 +252,26 @@ def get_statistics():
         if animal.alive is True:# or animal.alive is False:
             STATISTICS.append([animal.id_animal, animal.alive, animal.old_lifespan, \
                                animal.old_speed, animal.food])
+    print('statistics printed')
     return STATISTICS
 
 if __name__ == "__main__":
     POLE = Field()
-    ANIMALS = [Animal() for x in range(1, 11)]
+    print('INITIALING FIRST ANIMAL')
+    ANIMALS = [Animal() for x in range(1)]
     STATISTICS = []
-    for i in range(100):
-        print(i)
+    for i in range(2):
         POLE.food()#rozrzut jedzenia
+        #pprint(POLE.field)
         for j in range(40):   #do poprawy
+            print('round------------------------------')
             for animal in ANIMALS:
                 animal.move()   #ruch
+                print('Animal lifespan: ',animal.lifespan)
 
         for animal in ANIMALS:
             animal.check_food()
+
 
         #pprint(POLE.field)
         POLE.clear()
