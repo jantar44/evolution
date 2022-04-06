@@ -89,17 +89,18 @@ class Animal:
             y_cor (int): y coordinate of animal.
             y_pop (int): starting y coordinate.
         """
-        self.id_animal = next(self._ids)
-        self.evolve = random.randint(-3, 3)
-        self.lifespan = lifespan + self.evolve
-        self.old_lifespan = self.lifespan
-        self.speed = round(speed - 0.3 *self.evolve)
+        self.id_animal = next(self._ids)                    # 0
+        self.evolve = random.randint(-3, 3)                 # 1
+        self.lifespan = lifespan + self.evolve              # 2
+        self.old_lifespan = self.lifespan                   # 3
+        self.speed = round(speed - 0.3 *self.evolve)        # 4
         if self.speed == 0:
             self.speed = 1
-        self.old_speed = self.speed
-        self.food = food
-        self.alive = True
+        self.old_speed = self.speed                         # 5
+        self.food = food                                    # 6
+        self.alive = 1                                      # 7
         self.coordiates = [self.populate()]
+        self.animal_properties = np.array([self.id_animal, self.evolve, self.lifespan, self.old_lifespan, self.speed, self.old_speed,self.food,self.alive])
 
     def populate(self):
         """
@@ -136,7 +137,7 @@ class Animal:
 
         """
 
-        if self.alive is True:
+        if self.alive == 1:
             for _i in range(0, self.speed):
                 self.direction = random.randint(1, 4)
 
@@ -183,7 +184,7 @@ class Animal:
             alive (boolean): variable is set to False.
         """
 
-        self.alive = False
+        self.alive = 0
 
     def reset(self):
         """
@@ -237,7 +238,7 @@ def get_statistics():
 
     STATISTICS.append(['Tura:       ', i+1])
     for animal in ANIMALS:
-        if animal.alive is True:# or animal.alive is False:
+        if animal.alive == 1:# or animal.alive is False:
             STATISTICS.append([animal.id_animal, animal.alive, animal.old_lifespan, \
                                animal.old_speed, animal.food])
     return STATISTICS
